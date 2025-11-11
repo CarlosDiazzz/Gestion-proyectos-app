@@ -64,6 +64,12 @@ class User extends Authenticatable
         return $this->hasOne(Participante::class, 'usuario_id'); // Referencia usuario_id(FK) en Participante
     }
 
+    // Relación Uno a Uno: Un Usuario (User) puede ser un Juez
+    public function juez()
+    {
+        return $this->hasOne(Juez::class, 'usuario_id'); // Referencia usuario_id(FK) en Juez
+    }
+
     // Relación Muchos a Muchos: Un Usuario (User) tiene varios Roles (via Usuario_Rol)
     public function roles()
     {

@@ -50,4 +50,10 @@ class Proyecto extends Model
     {
         return $this->belongsTo(Repositorio::class, 'repositorio_id'); // Id_repositorio(FK)
     }
+
+    // Relación Muchos a Muchos: Un Proyecto tiene varios Criterios
+    public function criterios()
+    {
+        return $this->belongsToMany(Criterio::class, 'proyecto_criterio', 'proyecto_id', 'criterio_id');
+    }
 }

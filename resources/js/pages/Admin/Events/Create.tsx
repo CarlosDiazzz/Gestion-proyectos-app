@@ -1,0 +1,117 @@
+import { type BreadcrumbItem } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
+import AppLayout from '@/layouts/app-layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import InputError from '@/components/input-error';
+import { Textarea } from '@/components/ui/textarea';
+import { FormEventHandler } from 'react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Admin Dashboard',
+        href: route('admin.dashboard'),
+    },
+    {
+        title: 'Manage Events',
+        href: route('admin.events.index'),
+    },
+    {
+        title: 'Create Event',
+        href: route('admin.events.create'),
+    },
+];
+
+export default function CreateEvent() {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        nombre: '',
+        fecha_inicio: '',
+        fecha_fin: '',
+        descripcion: '',
+    });
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        post(route('admin.events.store'), {
+            onSuccess: () => reset(),
+        });
+    };
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Create Event" />
+            <div className="py-12">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-6 text-gray-900 dark:text-gray-100">
+                            <h2 className="text-2xl font-semibold leading-tight">Create New Event</h2>
+
+                            <form onSubmit={submit} className="mt-6 space-y-6">
+                                <div>
+                                    <Label htmlFor="nombre">Event Name</Label>
+                                    <Input
+                                        id="nombre"
+                                        type="text"
+                                        name="nombre"
+                                        value={data.nombre}
+                                        className="mt-1 block w-full"
+                                        autoComplete="nombre"
+                                        onChange={(e) => setData('nombre', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.nombre} className="mt-2" />
+                                </div>
+
+                                <div>
+                                    <Label htmlFor="fecha_inicio">Start Date</Label>
+                                    <Input
+                                        id="fecha_inicio"
+                                        type="date"
+                                        name="fecha_inicio"
+                                        value={data.fecha_inicio}
+                                        className="mt-1 block w-full"
+                                        onChange={(e) => setData('fecha_inicio', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.fecha_inicio} className="mt-2" />
+                                </div>
+
+                                <div>
+                                    <Label htmlFor="fecha_fin">End Date</Label>
+                                    <Input
+                                        id="fecha_fin"
+                                        type="date"
+                                        name="fecha_fin"
+                                        value={data.fecha_fin}
+                                        className="mt-1 block w-full"
+                                        onChange={(e) => setData('fecha_fin', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.fecha_fin} className="mt-2" />
+                                </div>
+
+                                <div>
+                                    <Label htmlFor="descripcion">Description</Label>
+                                    <Textarea
+                                        id="descripcion"
+                                        name="descripcion"
+                                        value={data.descripcion}
+                                        className="mt-1 block w-full"
+                                        onChange={(e) => setData('descripcion', e.target.value)}
+                                    />
+                                    <InputError message={errors.descripcion} className="mt-2" />
+                                </div>
+
+                                <div className="flex items-center gap-4">
+                                    <Button disabled={processing}>Create Event</Button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </AppLayout>
+    );
+}
