@@ -17,6 +17,6 @@ class Rol extends Model
     // Relación Muchos a Muchos: Un Rol pertenece a varios Usuarios (via Usuario_Rol)
     public function usuarios()
     {
-        return $this->belongsToMany(Usuario::class, 'usuario_rol', 'rol_id', 'usuario_id');
+        return $this->belongsToMany(User::class, 'usuario_rol', 'rol_id', 'usuario_id');
     }
 }

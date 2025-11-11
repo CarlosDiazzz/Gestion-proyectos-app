@@ -12,7 +12,7 @@ class Participante extends Model
     // Relación Inversa (Uno a Uno): El Participante pertenece a un Usuario
     public function usuario()
     {
-        return $this->belongsTo(Usuario::class, 'usuario_id');
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 
     // Relación Muchos a Muchos: Un Participante pertenece a muchos Equipos (via Participante_Equipo)
