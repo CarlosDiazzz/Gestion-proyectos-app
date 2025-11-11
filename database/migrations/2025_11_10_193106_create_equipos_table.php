@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('equipos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->unique();
+            $table->string('codigo_registro')->unique(); // Added codigo_registro
             $table->timestamps();
         });
     }

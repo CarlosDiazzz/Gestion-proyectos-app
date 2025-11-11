@@ -3,10 +3,12 @@
 // app/Models/Proyecto.php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Proyecto extends Model
 {
+    use HasFactory;
     // El modelo Proyecto tiene muchas FKs, lo que implica muchas relaciones "belongsTo"
     protected $fillable = [
         'equipo_id', 'calificacion_id', 'categoria', 'evento_id', 'asesor_id',

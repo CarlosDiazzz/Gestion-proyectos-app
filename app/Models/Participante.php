@@ -3,10 +3,12 @@
 // app/Models/Participante.php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Participante extends Model
 {
+    use HasFactory;
     protected $fillable = ['usuario_id', 'no_control', 'carrera_id', 'nombre', 'correo', 'telefono'];
 
     // Relación Inversa (Uno a Uno): El Participante pertenece a un Usuario

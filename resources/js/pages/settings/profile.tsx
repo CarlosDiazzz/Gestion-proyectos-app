@@ -89,6 +89,20 @@ export default function Profile({
                                     />
                                 </div>
 
+                                {/* Display User Roles */}
+                                <div className="grid gap-2">
+                                    <Label>Roles</Label>
+                                    {Array.isArray(auth.user.roles) && auth.user.roles.length > 0 ? (
+                                        <ul className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                            {auth.user.roles.map((role) => (
+                                                <li key={role.id}>{role.nombre}</li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">No roles assigned.</p>
+                                    )}
+                                </div>
+
                                 {mustVerifyEmail &&
                                     auth.user.email_verified_at === null && (
                                         <div>

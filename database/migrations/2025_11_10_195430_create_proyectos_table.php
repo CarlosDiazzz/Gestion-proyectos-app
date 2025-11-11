@@ -18,11 +18,9 @@ return new class extends Migration
             
             // Claves Foráneas (FKs)
             $table->foreignId('equipo_id')->constrained('equipos')->onDelete('restrict');
-            $table->foreignId('calificacion_id')->nullable()->constrained('calificaciones')->onDelete('set null');
+            // calificacion_id, avance_id, and repositorio_id will be added in separate migrations
             $table->foreignId('evento_id')->constrained('eventos')->onDelete('restrict');
             $table->foreignId('asesor_id')->constrained('asesores')->onDelete('restrict');
-            $table->foreignId('avance_id')->nullable()->constrained('avances')->onDelete('set null');
-            $table->foreignId('repositorio_id')->nullable()->constrained('repositorios')->onDelete('set null');
             
             $table->timestamps();
         });

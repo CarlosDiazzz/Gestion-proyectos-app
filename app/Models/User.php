@@ -69,4 +69,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Rol::class, 'usuario_rol', 'usuario_id', 'rol_id');
     }
+
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param string $roleName
+     * @return bool
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles->contains('nombre', $roleName);
+    }
 }

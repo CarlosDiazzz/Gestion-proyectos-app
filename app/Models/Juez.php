@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Juez extends Model
 {
+    use HasFactory;
+    protected $table = 'jueces'; // Explicitly define the table name
     protected $fillable = ['nombre', 'correo', 'telefono', 'especialidad_id'];
 
     // Relación Inversa (Uno a Muchos): Un Juez pertenece a una Especialidad

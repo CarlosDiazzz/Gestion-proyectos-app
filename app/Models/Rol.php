@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rol extends Model
 {
+    protected $table = 'roles'; // Explicitly define the table name
     protected $fillable = ['nombre'];
 
     // Relación Muchos a Muchos: Un Rol tiene varios Permisos (via Rol_Permiso)

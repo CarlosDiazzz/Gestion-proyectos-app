@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('repositorios', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('proyecto_id')->constrained('proyectos')->onDelete('cascade'); // Added proyecto_id
             $table->string('url')->unique();
+            $table->string('tipo')->nullable(); // Added tipo
             $table->timestamps();
         });
     }

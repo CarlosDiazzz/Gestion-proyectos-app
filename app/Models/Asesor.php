@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Asesor extends Model
 {
+    use HasFactory;
+    protected $table = 'asesores'; // Explicitly define the table name
     protected $fillable = ['nombre', 'correo', 'telefono'];
 
     // Relación Uno a Muchos: Un Asesor tiene muchos Proyectos

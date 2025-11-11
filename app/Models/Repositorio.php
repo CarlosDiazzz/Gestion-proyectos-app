@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Repositorio extends Model
 {
+    use HasFactory;
     protected $fillable = ['proyecto_id', 'url', 'tipo'];
 
     // Relación Inversa (Uno a Muchos): Un Repositorio pertenece a un Proyecto

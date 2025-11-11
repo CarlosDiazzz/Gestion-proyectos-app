@@ -18,7 +18,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user()->load('roles'); // Eager load roles
+
         return Inertia::render('settings/profile', [
+            'user' => $user, // Pass the user object with roles
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
         ]);

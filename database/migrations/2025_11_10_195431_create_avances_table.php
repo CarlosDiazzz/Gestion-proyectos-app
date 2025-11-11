@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('calificaciones', function (Blueprint $table) {
+        Schema::create('avances', function (Blueprint $table) {
             $table->id();
-            $table->decimal('calificacion', 5, 2);
-            $table->foreignId('criterio_id')->constrained('criterios')->onDelete('restrict');
+            $table->foreignId('proyecto_id')->constrained('proyectos')->onDelete('cascade'); // Added proyecto_id
+            $table->text('descripcion');
+            $table->date('fecha');
+            $table->string('archivo_url')->nullable(); // Added archivo_url
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('calificaciones');
+        Schema::dropIfExists('avances');
     }
 };

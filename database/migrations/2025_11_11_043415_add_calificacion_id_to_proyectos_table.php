@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('avances', function (Blueprint $table) {
-            $table->id();
-            $table->text('descripcion');
-            $table->date('fecha');
-            $table->timestamps();
+        Schema::table('proyectos', function (Blueprint $table) {
+            $table->foreignId('calificacion_id')->nullable()->constrained('calificaciones')->onDelete('set null');
         });
     }
 
@@ -24,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('avances');
+        Schema::table('proyectos', function (Blueprint $table) {
+            $table->dropForeign(['calificacion_id']);
+            $table->dropColumn('calificacion_id');
+        });
     }
 };

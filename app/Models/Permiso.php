@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Permiso extends Model
 {
+    use HasFactory;
     protected $fillable = ['nombre'];
 
     // Relación Muchos a Muchos: Un Permiso pertenece a varios Roles (via Rol_Permiso)

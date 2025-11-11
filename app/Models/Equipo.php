@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Equipo extends Model
 {
+    use HasFactory;
     protected $fillable = ['nombre', 'codigo_registro'];
 
     // Relación Uno a Muchos: Un Equipo tiene muchos Proyectos

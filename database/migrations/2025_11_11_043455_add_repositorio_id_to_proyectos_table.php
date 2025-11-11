@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('criterios', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre');
-            $table->text('descripcion')->nullable(); // Changed to text
-            $table->timestamps();
+        Schema::table('proyectos', function (Blueprint $table) {
+            $table->foreignId('repositorio_id')->nullable()->constrained('repositorios')->onDelete('set null');
         });
     }
 
@@ -24,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('criterios');
+        Schema::table('proyectos', function (Blueprint $table) {
+            $table->dropForeign(['repositorio_id']);
+            $table->dropColumn('repositorio_id');
+        });
     }
 };
