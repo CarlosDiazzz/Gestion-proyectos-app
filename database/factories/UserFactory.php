@@ -28,11 +28,33 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= 'password',
             'remember_token' => Str::random(10),
-            'two_factor_secret' => Str::random(10),
-            'two_factor_recovery_codes' => Str::random(10),
-            'two_factor_confirmed_at' => now(),
         ];
     }
+
+    /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (\App\Models\User $user) {
+            if ($user->roles()->count() === 0) {
+                $role = \App\Models\Rol::where('nombre', 'participante')->first();
+                $user->roles()->attach($role);
+            }
+        });
+    }
+
+    /**
+     * Indicate that the user has a specific role.
+     */
+    public function withRole(string $roleName): static
+    {
+        return $this->afterCreating(function (\App\Models\User $user) use ($roleName) {
+            $role = \App\Models\Rol::where('nombre', $roleName)->first();
+            $user->roles()->sync([$role->id]);
+        });
+    }
+
 
     /**
      * Indicate that the model's email address should be unverified.

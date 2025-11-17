@@ -1,5 +1,5 @@
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { Textarea } from '@/components/ui/textarea';
 import { FormEventHandler } from 'react';
+import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,19 +25,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CreateEvent() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         nombre: '',
+        descripcion: '',
         fecha_inicio: '',
         fecha_fin: '',
-        descripcion: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        post(route('admin.events.store'), {
-            onSuccess: () => reset(),
-        });
+        post(route('admin.events.store'));
     };
 
     return (
@@ -53,7 +51,6 @@ export default function CreateEvent() {
                                     <Label htmlFor="nombre">Event Name</Label>
                                     <Input
                                         id="nombre"
-                                        type="text"
                                         name="nombre"
                                         value={data.nombre}
                                         className="mt-1 block w-full"
@@ -64,7 +61,20 @@ export default function CreateEvent() {
                                     <InputError message={errors.nombre} className="mt-2" />
                                 </div>
 
-                                <div>
+                                <div className="mt-4">
+                                    <Label htmlFor="descripcion">Description</Label>
+                                    <Textarea
+                                        id="descripcion"
+                                        name="descripcion"
+                                        value={data.descripcion}
+                                        className="mt-1 block w-full"
+                                        onChange={(e) => setData('descripcion', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.descripcion} className="mt-2" />
+                                </div>
+
+                                <div className="mt-4">
                                     <Label htmlFor="fecha_inicio">Start Date</Label>
                                     <Input
                                         id="fecha_inicio"
@@ -78,7 +88,7 @@ export default function CreateEvent() {
                                     <InputError message={errors.fecha_inicio} className="mt-2" />
                                 </div>
 
-                                <div>
+                                <div className="mt-4">
                                     <Label htmlFor="fecha_fin">End Date</Label>
                                     <Input
                                         id="fecha_fin"
@@ -90,18 +100,6 @@ export default function CreateEvent() {
                                         required
                                     />
                                     <InputError message={errors.fecha_fin} className="mt-2" />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="descripcion">Description</Label>
-                                    <Textarea
-                                        id="descripcion"
-                                        name="descripcion"
-                                        value={data.descripcion}
-                                        className="mt-1 block w-full"
-                                        onChange={(e) => setData('descripcion', e.target.value)}
-                                    />
-                                    <InputError message={errors.descripcion} className="mt-2" />
                                 </div>
 
                                 <div className="flex items-center gap-4">

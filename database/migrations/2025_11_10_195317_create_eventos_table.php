@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion');
-            $table->foreignId('juez_id')->constrained('jueces')->onDelete('restrict');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
             $table->timestamps();

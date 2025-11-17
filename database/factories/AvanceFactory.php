@@ -23,7 +23,7 @@ class AvanceFactory extends Factory
     public function definition(): array
     {
         return [
-            'proyecto_id' => Proyecto::factory(),
+            'proyecto_id' => Proyecto::inRandomOrder()->first() ?? Proyecto::factory(),
             'fecha' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'descripcion' => $this->faker->paragraph(),
             'archivo_url' => $this->faker->url(),

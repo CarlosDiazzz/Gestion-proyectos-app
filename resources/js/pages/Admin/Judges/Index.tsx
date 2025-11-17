@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { route } from 'ziggy-js';
 
 interface User {
     id: number;
@@ -51,32 +52,36 @@ export default function JudgesIndex({ judges }: JudgesIndexProps) {
                             <h2 className="text-2xl font-semibold leading-tight">Manage Judges</h2>
 
                             <div className="mt-6">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Name</TableHead>
-                                            <TableHead>Email</TableHead>
-                                            <TableHead>Employee No.</TableHead>
-                                            <TableHead>Specialty</TableHead>
-                                            <TableHead>Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {judges.map((judge) => (
-                                            <TableRow key={judge.id}>
-                                                <TableCell>{judge.nombre}</TableCell>
-                                                <TableCell>{judge.correo}</TableCell>
-                                                <TableCell>{judge.no_empleado}</TableCell>
-                                                <TableCell>{judge.especialidad?.nombre}</TableCell>
-                                                <TableCell>
-                                                    <Link href={route('admin.judges.show', judge.id)}>
-                                                        <Button variant="link" size="sm">View Profile</Button>
-                                                    </Link>
-                                                </TableCell>
+                                {judges.length > 0 ? (
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Name</TableHead>
+                                                <TableHead>Email</TableHead>
+                                                <TableHead>Employee No.</TableHead>
+                                                <TableHead>Specialty</TableHead>
+                                                <TableHead>Actions</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {judges.map((judge) => (
+                                                <TableRow key={judge.id}>
+                                                    <TableCell>{judge.nombre}</TableCell>
+                                                    <TableCell>{judge.correo}</TableCell>
+                                                    <TableCell>{judge.no_empleado}</TableCell>
+                                                    <TableCell>{judge.especialidad?.nombre || 'N/A'}</TableCell>
+                                                    <TableCell>
+                                                        <Link href={route('admin.judges.show', judge.id)}>
+                                                            <Button variant="link" size="sm">View Profile</Button>
+                                                        </Link>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                ) : (
+                                    <p>No judges found.</p>
+                                )}
                             </div>
                         </div>
                     </div>

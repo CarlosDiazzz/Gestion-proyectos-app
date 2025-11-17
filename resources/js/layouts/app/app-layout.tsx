@@ -1,19 +1,21 @@
 import { AppContent } from '@/components/app-content';
+import { AppHeader } from '@/components/app-header';
+import { AppSidebar } from '@/components/app-sidebar';
 import { AppShell } from '@/components/app-shell';
-import { AppHeader } from '@/components/app-header'; // Import AppHeader
 import { type BreadcrumbItem } from '@/types';
-import { type PropsWithChildren } from 'react';
 
-export default function AppLayout({ // Renamed from AppSidebarLayout
-    children,
-    breadcrumbs = [],
-}: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
+interface AppLayoutProps {
+    children: React.ReactNode;
+    breadcrumbs?: BreadcrumbItem[];
+}
+
+export default function AppLayout({ children }: AppLayoutProps) {
     return (
-        <AppShell variant="header">
-            <AppHeader />
-            <AppContent variant="header" className="overflow-x-hidden">
-                {/* AppSidebarHeader removed, its functionality might be integrated into AppHeader or handled elsewhere */}
-                {children}
+        <AppShell variant="sidebar">
+            <AppSidebar />
+            <AppContent>
+                <AppHeader />
+                <main className="flex-1 px-6 pb-6">{children}</main>
             </AppContent>
         </AppShell>
     );

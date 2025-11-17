@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react'; // Import useForm
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { route } from 'ziggy-js';
 
 interface Event {
     id: number;
@@ -52,39 +53,44 @@ export default function EventsIndex({ events }: EventsIndexProps) {
                             </div>
 
                             <div className="mt-6">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Name</TableHead>
-                                            <TableHead>Start Date</TableHead>
-                                            <TableHead>End Date</TableHead>
-                                            <TableHead>Description</TableHead>
-                                            <TableHead>Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {events.map((event) => (
-                                            <TableRow key={event.id}>
-                                                <TableCell>{event.nombre}</TableCell>
-                                                <TableCell>{event.fecha_inicio}</TableCell>
-                                                <TableCell>{event.fecha_fin}</TableCell>
-                                                <TableCell>
-                                                    <Link href={route('admin.events.edit', event.id)}>
-                                                        <Button variant="link" size="sm">Edit</Button>
-                                                    </Link>
-                                                    <Button
-                                                        variant="destructive"
-                                                        size="sm"
-                                                        onClick={() => handleDelete(event.id)}
-                                                        className="ml-2"
-                                                    >
-                                                        Delete
-                                                    </Button>
-                                                </TableCell>
+                                {events.length > 0 ? (
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Name</TableHead>
+                                                <TableHead>Start Date</TableHead>
+                                                <TableHead>End Date</TableHead>
+                                                <TableHead>Description</TableHead>
+                                                <TableHead>Actions</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {events.map((event) => (
+                                                <TableRow key={event.id}>
+                                                    <TableCell>{event.nombre}</TableCell>
+                                                    <TableCell>{event.fecha_inicio}</TableCell>
+                                                    <TableCell>{event.fecha_fin}</TableCell>
+                                                    <TableCell>{event.descripcion}</TableCell>
+                                                    <TableCell>
+                                                        <Link href={route('admin.events.edit', event.id)}>
+                                                            <Button variant="link" size="sm">Edit</Button>
+                                                        </Link>
+                                                        <Button
+                                                            variant="destructive"
+                                                            size="sm"
+                                                            onClick={() => handleDelete(event.id)}
+                                                            className="ml-2"
+                                                        >
+                                                            Delete
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                ) : (
+                                    <p>No events found.</p>
+                                )}
                             </div>
                         </div>
                     </div>

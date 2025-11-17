@@ -26,10 +26,10 @@ class ParticipanteFactory extends Factory
         return [
             'usuario_id' => User::factory(), // Assumes UserFactory exists
             'no_control' => $this->faker->unique()->numerify('########'),
-            'carrera_id' => Carrera::factory(), // Assumes CarreraFactory exists
+            'carrera_id' => Carrera::inRandomOrder()->first() ?? Carrera::factory(), // Use existing carrera or create new
             'nombre' => $this->faker->name(),
             'correo' => $this->faker->unique()->safeEmail(),
-            'telefono' => $this->faker->phoneNumber(),
+            'telefono' => $this->faker->unique()->phoneNumber(),
         ];
     }
 }

@@ -1,21 +1,12 @@
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FormEventHandler } from 'react';
-
-interface Role {
-    id: number;
-    nombre: string;
-}
-
-interface CreateUserProps {
-    roles: Role[];
-}
+import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -23,26 +14,22 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('admin.dashboard'),
     },
     {
-        title: 'Create User',
+        title: 'Manage Users',
         href: route('admin.users.create'),
     },
 ];
 
-export default function CreateUser({ roles }: CreateUserProps) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+export default function CreateUser() {
+    const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
-        role_id: '', // To store the selected role ID
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        post(route('admin.users.store'), {
-            onSuccess: () => reset('password', 'password_confirmation'),
-        });
+        post(route('admin.users.store'));
     };
 
     return (
@@ -59,7 +46,6 @@ export default function CreateUser({ roles }: CreateUserProps) {
                                     <Label htmlFor="name">Name</Label>
                                     <Input
                                         id="name"
-                                        type="text"
                                         name="name"
                                         value={data.name}
                                         className="mt-1 block w-full"
@@ -70,7 +56,7 @@ export default function CreateUser({ roles }: CreateUserProps) {
                                     <InputError message={errors.name} className="mt-2" />
                                 </div>
 
-                                <div>
+                                <div className="mt-4">
                                     <Label htmlFor="email">Email</Label>
                                     <Input
                                         id="email"
@@ -85,7 +71,7 @@ export default function CreateUser({ roles }: CreateUserProps) {
                                     <InputError message={errors.email} className="mt-2" />
                                 </div>
 
-                                <div>
+                                <div className="mt-4">
                                     <Label htmlFor="password">Password</Label>
                                     <Input
                                         id="password"
@@ -100,7 +86,7 @@ export default function CreateUser({ roles }: CreateUserProps) {
                                     <InputError message={errors.password} className="mt-2" />
                                 </div>
 
-                                <div>
+                                <div className="mt-4">
                                     <Label htmlFor="password_confirmation">Confirm Password</Label>
                                     <Input
                                         id="password_confirmation"
@@ -113,23 +99,6 @@ export default function CreateUser({ roles }: CreateUserProps) {
                                         required
                                     />
                                     <InputError message={errors.password_confirmation} className="mt-2" />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="role_id">Role</Label>
-                                    <Select onValueChange={(value) => setData('role_id', value)} value={data.role_id}>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Select a role" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {roles.map((role) => (
-                                                <SelectItem key={role.id} value={String(role.id)}>
-                                                    {role.nombre}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError message={errors.role_id} className="mt-2" />
                                 </div>
 
                                 <div className="flex items-center gap-4">

@@ -22,4 +22,10 @@ class Juez extends Model
     {
         return $this->hasMany(Calificacion::class, 'juez_id');
     }
+
+    // Relación Muchos a Muchos: Un Juez puede estar en muchos Eventos
+    public function eventos()
+    {
+        return $this->belongsToMany(Evento::class, 'evento_juez');
+    }
 }

@@ -21,8 +21,21 @@ class CarreraFactory extends Factory
      */
     public function definition(): array
     {
+        $carreras = [
+            'Ingeniería en Sistemas Computacionales',
+            'Ingeniería en Gestión Empresarial',
+            'Ingeniería Industrial',
+            'Ingeniería Electromecánica',
+            'Licenciatura en Administración',
+            'Contador Público',
+            'Ingeniería en Informática',
+            'Ingeniería en Electrónica',
+            'Ingeniería Mecánica',
+            'Ingeniería Civil'
+        ];
+        
         return [
-            'nombre' => $this->faker->unique()->word(),
+            'nombre' => $this->faker->unique()->randomElement($carreras),
         ];
     }
 }

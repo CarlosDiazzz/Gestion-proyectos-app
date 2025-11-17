@@ -13,11 +13,27 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react'; // Import usePage
+import { route } from 'ziggy-js';
 import { BookOpen, Folder, LayoutGrid, UserCog, Users } from 'lucide-react'; // Import new icons
 import AppLogo from './app-logo';
 
+interface Role {
+    nombre: string;
+}
+
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    roles: Role[];
+}
+
+interface Auth {
+    user: User | null;
+}
+
 export function AppSidebar() {
-    const { auth } = usePage().props as any; // Access auth data from Inertia page props
+    const { auth } = usePage<{ auth: Auth }>().props;
 
     const mainNavItems: NavItem[] = [
         {
@@ -27,7 +43,7 @@ export function AppSidebar() {
         },
     ];
 
-    if (auth.user && auth.user.roles.some((role: { nombre: string }) => role.nombre === 'administrador')) {
+    if (auth.user?.roles && (auth.user.roles as Role[]).some((role: Role) => role.nombre === 'administrador')) {
         mainNavItems.push(
             {
                 title: 'Admin Dashboard',
@@ -67,7 +83,7 @@ export function AppSidebar() {
         );
     }
 
-    if (auth.user && auth.user.roles.some((role: { nombre: string }) => role.nombre === 'participante')) {
+    if (auth.user?.roles && (auth.user.roles as Role[]).some((role: Role) => role.nombre === 'participante')) {
         mainNavItems.push(
             {
                 title: 'Participant Dashboard',
@@ -81,13 +97,13 @@ export function AppSidebar() {
             },
             {
                 title: 'Certifications',
-                href: route('participant.certifications.index'),
+                href: route('participant.certificates.index'),
                 icon: BookOpen, // Use an appropriate icon
             },
         );
     }
 
-    if (auth.user && auth.user.roles.some((role: { nombre: string }) => role.nombre === 'juez')) {
+    if (auth.user?.roles && (auth.user.roles as Role[]).some((role: Role) => role.nombre === 'juez')) {
         mainNavItems.push(
             {
                 title: 'Judge Dashboard',

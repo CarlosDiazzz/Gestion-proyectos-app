@@ -19,8 +19,24 @@ class ParticipantController extends Controller
         $user = Auth::user();
         $participant = $user->participante()->with(['equipos.proyectos', 'carrera'])->first();
 
+        $events = Evento::all()->map(function ($event) {
+            return [
+                'title' => $event->nombre,
+                'start' => $event->fecha_inicio,
+                'end' => $event->fecha_fin,
+            ];
+        });
+
+        $progressData = [
+            ['name' => 'Criterion A', 'progress' => 65],
+            ['name' => 'Criterion B', 'progress' => 80],
+            ['name' => 'Criterion C', 'progress' => 45],
+        ];
+
         return Inertia::render('Participant/Dashboard', [
             'participant' => $participant,
+            'events' => $events,
+            'progressData' => $progressData,
         ]);
     }
 

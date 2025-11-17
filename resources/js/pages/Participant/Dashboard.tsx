@@ -1,45 +1,12 @@
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { type BreadcrumbItem, type SharedData } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import { Calendar } from '@/components/ui/calendar';
+import { Event } from 'react-big-calendar';
+import { Carousel } from '@/components/ui/carousel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
-
-interface Carrera {
-    id: number;
-    nombre: string;
-}
-
-interface Proyecto {
-    id: number;
-    nombre: string;
-}
-
-interface Equipo {
-    id: number;
-    nombre: string;
-    codigo_registro: string;
-    proyectos: Proyecto[];
-}
-
-interface Participant {
-    id: number;
-    no_control: string;
-    nombre: string;
-    correo: string;
-    telefono: string;
-    usuario: User;
-    carrera: Carrera;
-    equipos: Equipo[];
-}
-
-interface ParticipantDashboardProps {
-    participant: Participant;
-}
+import { ProgressChart } from '@/components/ui/progress-chart';
+import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -48,7 +15,40 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ParticipantDashboard({ participant }: ParticipantDashboardProps) {
+interface Carrera {
+    id: number;
+    nombre: string;
+}
+
+interface Project {
+    id: number;
+    nombre: string;
+    // Add other project properties as needed
+}
+
+interface Team {
+    id: number;
+    nombre: string;
+    proyectos: Project[];
+    // Add other team properties as needed
+}
+
+interface Participant {
+    id: number;
+    carrera: Carrera;
+    equipos: Team[];
+    // Add other participant properties as needed
+}
+
+interface ParticipantDashboardProps {
+    events: Event[];
+    participant: Participant | null;
+    progressData: { name: string; progress: number }[];
+}
+
+export default function ParticipantDashboard({ events, participant, progressData }: ParticipantDashboardProps) {
+    const { auth } = usePage<SharedData>().props;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Participant Dashboard" />
@@ -56,55 +56,46 @@ export default function ParticipantDashboard({ participant }: ParticipantDashboa
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
-                            <h2 className="text-2xl font-semibold leading-tight">Welcome, {participant.nombre}!</h2>
-                            <p className="mt-4">This is your participant dashboard.</p>
+                            <h2 className="text-2xl font-semibold leading-tight">Participant Dashboard</h2>
+                            <p className="mt-4">Welcome, {auth.user?.name}!</p>
+                        </div>
+                    </div>
 
-                            <div className="mt-8 space-y-6">
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Your Profile</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="space-y-2">
-                                        <p><strong>Name:</strong> {participant.nombre}</p>
-                                        <p><strong>Email:</strong> {participant.correo}</p>
-                                        <p><strong>Control Number:</strong> {participant.no_control}</p>
-                                        <p><strong>Career:</strong> {participant.carrera?.nombre || 'N/A'}</p>
-                                        <p><strong>Phone:</strong> {participant.telefono || 'N/A'}</p>
-                                    </CardContent>
-                                </Card>
+                    {participant && participant.equipos.length > 0 && (
+                        <div className="mt-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                            <div className="p-6 text-gray-900 dark:text-gray-100">
+                                <h3 className="text-xl font-semibold leading-tight">Project Progress</h3>
+                                <div className="mt-4">
+                                    <ProgressChart data={progressData} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Your Team(s)</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="space-y-4">
-                                        {participant.equipos && participant.equipos.length > 0 ? (
-                                            participant.equipos.map((team) => (
-                                                <div key={team.id} className="border p-4 rounded-md">
-                                                    <p><strong>Team Name:</strong> {team.nombre}</p>
-                                                    <p><strong>Registration Code:</strong> {team.codigo_registro}</p>
-                                                    <h4 className="font-semibold mt-2">Assigned Projects:</h4>
-                                                    {team.proyectos && team.proyectos.length > 0 ? (
-                                                        <ul className="list-disc list-inside ml-4">
-                                                            {team.proyectos.map((project) => (
-                                                            <li key={project.id} className="flex items-center justify-between">
-                                                                {project.nombre}
-                                                                <Link href={route('participant.projects.advances.create', project.id)}>
-                                                                    <Button variant="outline" size="sm">Upload Advance</Button>
-                                                                </Link>
-                                                            </li>
-                                                            ))}
-                                                        </ul>
-                                                    ) : (
-                                                        <p className="ml-4">No projects assigned to this team yet.</p>
-                                                    )}
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p>You are not currently assigned to any team.</p>
-                                        )}
-                                    </CardContent>
-                                </Card>
+                    <div className="mt-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-6 text-gray-900 dark:text-gray-100">
+                            <h3 className="text-xl font-semibold leading-tight">Events Calendar</h3>
+                            <Calendar events={events} style={{ height: 600 }} />
+                        </div>
+                    </div>
+
+                    <div className="mt-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-6 text-gray-900 dark:text-gray-100">
+                            <h3 className="text-xl font-semibold leading-tight">Current Events Carousel</h3>
+                            <div className="mt-4">
+                                <Carousel
+                                    items={events.map((event) => (
+                                        <Card key={event.title as string}>
+                                            <CardHeader>
+                                                <CardTitle>{event.title}</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <p>Starts: {new Date(event.start as Date).toLocaleDateString()}</p>
+                                                <p>Ends: {new Date(event.end as Date).toLocaleDateString()}</p>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                />
                             </div>
                         </div>
                     </div>

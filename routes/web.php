@@ -11,10 +11,14 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'check.participant.profile'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+
+    Route::get('registro-participante', [\App\Http\Controllers\ParticipantRegistrationController::class, 'create'])->name('participant.registration.create');
+    Route::post('registro-participante', [\App\Http\Controllers\ParticipantRegistrationController::class, 'store'])->name('participant.registration.store');
+
 
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -25,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
 
         // Team Management
+        Route::get('teams', [\App\Http\Controllers\Admin\TeamController::class, 'index'])->name('teams.index');
         Route::get('teams/create', [\App\Http\Controllers\Admin\TeamController::class, 'create'])->name('teams.create');
         Route::post('teams', [\App\Http\Controllers\Admin\TeamController::class, 'store'])->name('teams.store');
 
@@ -37,7 +42,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('projects', [\App\Http\Controllers\Admin\ProjectController::class, 'index'])->name('projects.index');
         Route::get('projects/{project}/criteria', [\App\Http\Controllers\Admin\ProjectController::class, 'criteria'])->name('projects.criteria');
         Route::patch('projects/{project}/criteria', [\App\Http\Controllers\Admin\ProjectController::class, 'updateCriteria'])->name('projects.updateCriteria');
-        Route::get('projects/{project}/advances', [\App\Http\Controllers\Admin\ProjectController::class, 'advances'])->name('projects.advances');
+        
+        // Project Advances
+        Route::get('advances', [\App\Http\Controllers\Admin\AdvanceController::class, 'index'])->name('advances.index');
+        Route::get('projects/{project}/advances', [\App\Http\Controllers\Admin\AdvanceController::class, 'show'])->name('projects.advances');
 
         // Judge Management
         Route::get('judges', [\App\Http\Controllers\Admin\JudgeController::class, 'index'])->name('judges.index');
@@ -56,6 +64,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['participant'])->prefix('participant')->name('participant.')->group(function () {
         Route::get('dashboard', [\App\Http\Controllers\ParticipantController::class, 'index'])->name('dashboard');
 
+        // Team Management
+        Route::get('teams/create', [\App\Http\Controllers\Participant\TeamController::class, 'create'])->name('teams.create');
+        Route::post('teams', [\App\Http\Controllers\Participant\TeamController::class, 'store'])->name('teams.store');
+
         // Project Advances
         Route::get('projects/{project}/advances/create', [\App\Http\Controllers\Participant\AdvanceController::class, 'create'])->name('projects.advances.create');
         Route::post('projects/{project}/advances', [\App\Http\Controllers\Participant\AdvanceController::class, 'store'])->name('projects.advances.store');
@@ -64,7 +76,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('events', [\App\Http\Controllers\ParticipantController::class, 'events'])->name('events.index');
 
         // Certifications
-        Route::get('certifications', [\App\Http\Controllers\ParticipantController::class, 'certifications'])->name('certifications.index');
+        Route::get('certificates', [\App\Http\Controllers\Participant\CertificateController::class, 'index'])->name('certificates.index');
+        Route::get('certificates/projects/{project}', [\App\Http\Controllers\Participant\CertificateController::class, 'show'])->name('certificates.show');
     });
 
     // Judge Routes

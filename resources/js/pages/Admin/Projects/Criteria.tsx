@@ -1,11 +1,11 @@
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FormEventHandler, useState } from 'react';
+import { route } from 'ziggy-js';
 
 interface Criterio {
     id: number;
@@ -41,41 +41,31 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function ManageProjectCriteria({ project, availableCriteria }: ProjectsCriteriaProps) {
     const { data, setData, patch, processing, errors } = useForm({
-        current_criteria: project.criterios.map(c => String(c.id)),
-        new_criteria: [] as string[],
+        criteria_ids: project.criterios.map(c => String(c.id)),
     });
 
     const [selectedNewCriteria, setSelectedNewCriteria] = useState<string[]>([]);
 
     const handleAddCriteria = () => {
         const criteriaToAdd = selectedNewCriteria.filter(
-            (id) => !data.current_criteria.includes(id) && !data.new_criteria.includes(id)
+            (id) => !data.criteria_ids.includes(id)
         );
-        setData('new_criteria', [...data.new_criteria, ...criteriaToAdd]);
+        setData('criteria_ids', [...data.criteria_ids, ...criteriaToAdd]);
         setSelectedNewCriteria([]); // Clear selection after adding
     };
 
-    const handleRemoveCriteria = (idToRemove: string, isNew: boolean) => {
-        if (isNew) {
-            setData('new_criteria', data.new_criteria.filter(id => id !== idToRemove));
-        } else {
-            setData('current_criteria', data.current_criteria.filter(id => id !== idToRemove));
-        }
+    const handleRemoveCriteria = (idToRemove: string) => {
+        setData('criteria_ids', data.criteria_ids.filter(id => id !== idToRemove));
     };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        patch(route('admin.projects.updateCriteria', project.id), {
-            data: {
-                criteria_ids: [...data.current_criteria, ...data.new_criteria].map(Number),
-            },
-        });
+        patch(route('admin.projects.updateCriteria', project.id));
     };
 
-    const allSelectedCriteriaIds = [...data.current_criteria, ...data.new_criteria];
     const criteriaOptions = availableCriteria.filter(
-        (c) => !allSelectedCriteriaIds.includes(String(c.id))
+        (c) => !data.criteria_ids.includes(String(c.id))
     );
 
     return (
@@ -90,12 +80,11 @@ export default function ManageProjectCriteria({ project, availableCriteria }: Pr
                             <form onSubmit={submit} className="mt-6 space-y-6">
                                 {/* Current Criteria */}
                                 <h3 className="text-xl font-semibold mt-8 mb-4">Assigned Criteria</h3>
-                                {allSelectedCriteriaIds.length > 0 ? (
+                                {data.criteria_ids.length > 0 ? (
                                     <div className="space-y-2">
-                                        {allSelectedCriteriaIds.map((criterioId) => {
+                                        {data.criteria_ids.map((criterioId) => {
                                             const criterio = availableCriteria.find(c => String(c.id) === criterioId);
                                             if (!criterio) return null; // Should not happen if data is consistent
-                                            const isNew = data.new_criteria.includes(criterioId);
                                             return (
                                                 <div key={criterio.id} className="flex items-center justify-between p-2 border rounded-md">
                                                     <span>{criterio.nombre}</span>
@@ -103,7 +92,7 @@ export default function ManageProjectCriteria({ project, availableCriteria }: Pr
                                                         type="button"
                                                         variant="destructive"
                                                         size="sm"
-                                                        onClick={() => handleRemoveCriteria(String(criterio.id), isNew)}
+                                                        onClick={() => handleRemoveCriteria(String(criterio.id))}
                                                     >
                                                         Remove
                                                     </Button>

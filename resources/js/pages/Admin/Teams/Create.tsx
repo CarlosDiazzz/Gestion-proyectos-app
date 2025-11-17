@@ -1,16 +1,21 @@
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { FormEventHandler } from 'react';
+import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Admin Dashboard',
         href: route('admin.dashboard'),
+    },
+    {
+        title: 'Manage Teams',
+        href: route('admin.teams.index'),
     },
     {
         title: 'Create Team',
@@ -19,17 +24,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CreateTeam() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         nombre: '',
-        codigo_registro: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        post(route('admin.teams.store'), {
-            onSuccess: () => reset(),
-        });
+        post(route('admin.teams.store'));
     };
 
     return (
@@ -46,7 +47,6 @@ export default function CreateTeam() {
                                     <Label htmlFor="nombre">Team Name</Label>
                                     <Input
                                         id="nombre"
-                                        type="text"
                                         name="nombre"
                                         value={data.nombre}
                                         className="mt-1 block w-full"
@@ -55,21 +55,6 @@ export default function CreateTeam() {
                                         required
                                     />
                                     <InputError message={errors.nombre} className="mt-2" />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="codigo_registro">Registration Code</Label>
-                                    <Input
-                                        id="codigo_registro"
-                                        type="text"
-                                        name="codigo_registro"
-                                        value={data.codigo_registro}
-                                        className="mt-1 block w-full"
-                                        autoComplete="codigo_registro"
-                                        onChange={(e) => setData('codigo_registro', e.target.value)}
-                                        required
-                                    />
-                                    <InputError message={errors.codigo_registro} className="mt-2" />
                                 </div>
 
                                 <div className="flex items-center gap-4">

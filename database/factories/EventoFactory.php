@@ -30,7 +30,17 @@ class EventoFactory extends Factory
             'fecha_inicio' => $startDate,
             'fecha_fin' => $endDate,
             'descripcion' => $this->faker->paragraph(),
-            'juez_id' => Juez::factory(), // Add juez_id
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Evento $evento) {
+            $jueces = Juez::inRandomOrder()->limit(rand(1, 3))->get();
+            $evento->jueces()->attach($jueces);
+        });
     }
 }

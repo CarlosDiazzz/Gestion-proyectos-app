@@ -19,8 +19,24 @@ class JudgeController extends Controller
         $user = Auth::user();
         $judge = $user->juez()->with(['proyectos.equipo', 'proyectos.criterios', 'especialidad'])->first();
 
+        $events = Evento::all()->map(function ($event) {
+            return [
+                'title' => $event->nombre,
+                'start' => $event->fecha_inicio,
+                'end' => $event->fecha_fin,
+            ];
+        });
+
+        $gradingData = [
+            ['name' => 'Project A', 'score' => 75],
+            ['name' => 'Project B', 'score' => 90],
+            ['name' => 'Project C', 'score' => 60],
+        ];
+
         return Inertia::render('Judge/Dashboard', [
             'judge' => $judge,
+            'events' => $events,
+            'gradingData' => $gradingData,
         ]);
     }
 
